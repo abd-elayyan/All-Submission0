@@ -1,12 +1,13 @@
 const Course = ({ course }) => {
   console.log("course component : ", course);
-  let total = 0;
+
+  let total = course.parts.reduce((sum, part) => sum + part.exercises, 0);
+
   return (
     <div>
       {" "}
       <h1>{course.name}</h1>
       {course.parts.map((p) => {
-        total += p.exercises;
         return (
           <p key={p.id}>
             {p.name} {p.exercises}
