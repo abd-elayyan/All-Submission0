@@ -6,6 +6,7 @@ const App = () => {
   ]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [search, setSearch] = useState("");
 
   const submitForm = (event) => {
     event.preventDefault();
@@ -35,17 +36,28 @@ const App = () => {
   const handleChangeNumber = (event) => {
     setNewNumber(event.target.value);
   };
+  const handleSearch = (event) => {
+    let searched = event.target.value.trim().toLowerCase();
+    console.log(searched);
+    setSearch(searched);
+  };
+
+  const personsToShow = persons.filter((person) =>
+    person.name.toLocaleLowerCase().includes(search),
+  );
 
   return (
     <div>
       <h2>Phonebook</h2>
 
       <form onSubmit={submitForm}>
+        {/* name : */}
         <div>
           name:
           <input value={newName} onChange={handleChangeName} />
         </div>
         <br></br>
+        {/* phone */}
         <div>
           phone number :
           <input
@@ -53,16 +65,21 @@ const App = () => {
             value={newNumber}
             onChange={handleChangeNumber}
           />
-        </div>{" "}
+        </div>
         <br></br>
+        {/* submotion */}
         <div>
           <button type="submit">add</button>
         </div>
       </form>
+      <div>
+        search :
+        <input type="text" onChange={handleSearch} />
+      </div>
 
       <h2>Numbers</h2>
       <div>
-        {persons.map((ps, index) => {
+        {personsToShow.map((ps, index) => {
           return (
             <>
               <p key={index}>
