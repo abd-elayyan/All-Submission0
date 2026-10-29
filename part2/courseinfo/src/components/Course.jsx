@@ -15,5 +15,5 @@ const Course = ({ courses }) => {
     </div>
   );
 };
-
+// the code was running but it just need a restart
 export default Course;
