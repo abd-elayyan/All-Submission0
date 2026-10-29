@@ -1,12 +1,15 @@
 import { useState } from "react";
 
 const App = () => {
-  const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
+  const [persons, setPersons] = useState([
+    { name: "Arto Hellas", number: "0799" },
+  ]);
   const [newName, setNewName] = useState("");
+  const [newNumber, setNewNumber] = useState("");
 
   const submitForm = (event) => {
     event.preventDefault();
-    console.log("sumit form persons", persons);
+    // console.log("sumit form persons", persons);
 
     const name = newName.trim();
     let isExist = persons.some((person) => person.name === name);
@@ -14,15 +17,23 @@ const App = () => {
     if (isExist) {
       alert(`${newName} is alreddy added`);
       return;
-    } else {
-      const theNewPerson = { name: newName };
-      setPersons(persons.concat(theNewPerson));
-      setNewName("");
     }
+
+    if (name === "") {
+      alert(`you cannot add an empty name`);
+      return;
+    }
+
+    const theNewPerson = { name: newName, number: newNumber };
+    setPersons(persons.concat(theNewPerson));
+    setNewName("");
   };
 
-  const handleChange = (event) => {
+  const handleChangeName = (event) => {
     setNewName(event.target.value);
+  };
+  const handleChangeNumber = (event) => {
+    setNewNumber(event.target.value);
   };
 
   return (
@@ -32,8 +43,18 @@ const App = () => {
       <form onSubmit={submitForm}>
         <div>
           name:
-          <input value={newName} onChange={handleChange} />
+          <input value={newName} onChange={handleChangeName} />
         </div>
+        <br></br>
+        <div>
+          phone number :
+          <input
+            type="number"
+            value={newNumber}
+            onChange={handleChangeNumber}
+          />
+        </div>{" "}
+        <br></br>
         <div>
           <button type="submit">add</button>
         </div>
@@ -42,7 +63,15 @@ const App = () => {
       <h2>Numbers</h2>
       <div>
         {persons.map((ps, index) => {
-          return <p key={index}>{ps.name}</p>;
+          return (
+            <>
+              <p key={index}>
+                name:{ps.name} number:
+                {ps.number}
+              </p>
+              <br></br>
+            </>
+          );
         })}
       </div>
     </div>
