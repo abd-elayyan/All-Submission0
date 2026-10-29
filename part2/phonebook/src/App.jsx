@@ -3,19 +3,28 @@ import { useState } from "react";
 const App = () => {
   const [persons, setPersons] = useState([{ name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
-  console.log(persons);
 
   const submitForm = (event) => {
     event.preventDefault();
     console.log("sumit form persons", persons);
-    const theNewPerson = { name: newName };
-    setPersons(persons.concat(theNewPerson));
-    setNewName("");
+
+    const name = newName.trim();
+    let isExist = persons.some((person) => person.name === name);
+
+    if (isExist) {
+      alert(`${newName} is alreddy added`);
+      return;
+    } else {
+      const theNewPerson = { name: newName };
+      setPersons(persons.concat(theNewPerson));
+      setNewName("");
+    }
   };
 
   const handleChange = (event) => {
     setNewName(event.target.value);
   };
+
   return (
     <div>
       <h2>Phonebook</h2>
