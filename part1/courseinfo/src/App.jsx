@@ -12,7 +12,7 @@ export const Part = (props) => {
 };
 
 export const Content = ({ parts }) => {
-  console.log(parts);
+  // console.log(parts);
   return parts.map((p) => {
     return <Part key={p.name} name={p.name} exercises={p.exercises} />;
   });

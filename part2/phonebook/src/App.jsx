@@ -1,4 +1,7 @@
 import { useState } from "react";
+import PersonForm from "../components/PersonForm";
+import Filter from "../components/Filter";
+import Persons from "../components/Persons";
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -28,8 +31,8 @@ const App = () => {
     const theNewPerson = { name: newName, number: newNumber };
     setPersons(persons.concat(theNewPerson));
     setNewName("");
+    setNewNumber("");
   };
-
   const handleChangeName = (event) => {
     setNewName(event.target.value);
   };
@@ -38,59 +41,27 @@ const App = () => {
   };
   const handleSearch = (event) => {
     let searched = event.target.value.trim().toLowerCase();
-    console.log(searched);
+    // console.log(searched);
     setSearch(searched);
   };
-
   const personsToShow = persons.filter((person) =>
     person.name.toLocaleLowerCase().includes(search),
   );
-
+  // console.log(personsToShow);
   return (
     <div>
       <h2>Phonebook</h2>
-
-      <form onSubmit={submitForm}>
-        {/* name : */}
-        <div>
-          name:
-          <input value={newName} onChange={handleChangeName} />
-        </div>
-        <br></br>
-        {/* phone */}
-        <div>
-          phone number :
-          <input
-            type="number"
-            value={newNumber}
-            onChange={handleChangeNumber}
-          />
-        </div>
-        <br></br>
-        {/* submotion */}
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <div>
-        search :
-        <input type="text" onChange={handleSearch} />
-      </div>
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleChangeName={handleChangeName}
+        handleChangeNumber={handleChangeNumber}
+        submitForm={submitForm}
+      />
+      <Filter handleSearch={handleSearch} />
 
       <h2>Numbers</h2>
-      <div>
-        {personsToShow.map((ps, index) => {
-          return (
-            <>
-              <p key={index}>
-                name:{ps.name} number:
-                {ps.number}
-              </p>
-              <br></br>
-            </>
-          );
-        })}
-      </div>
+      <Persons personsToShow={personsToShow} />
     </div>
   );
 };
