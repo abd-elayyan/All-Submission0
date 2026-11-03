@@ -3,6 +3,7 @@ import PersonForm from "../components/PersonForm";
 import Filter from "../components/Filter";
 import Persons from "../components/Persons";
 import axios from "axios";
+import pServices from "./services/persons";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -35,9 +36,12 @@ const App = () => {
     }
 
     const theNewPerson = { name: newName, number: newNumber };
-    setPersons(persons.concat(theNewPerson));
-    setNewName("");
-    setNewNumber("");
+
+    pServices.create(theNewPerson).then((returnedPerson) => {
+      setPersons(persons.concat(returnedPerson));
+      setNewName("");
+      setNewNumber("");
+    });
   };
   const handleChangeName = (event) => {
     setNewName(event.target.value);
