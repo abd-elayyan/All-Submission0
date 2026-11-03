@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import PersonForm from "../components/PersonForm";
 import Filter from "../components/Filter";
 import Persons from "../components/Persons";
-import axios from "axios";
 import pServices from "./services/persons";
 
 const App = () => {
@@ -12,9 +11,9 @@ const App = () => {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    axios.get("http://localhost:3001/persons").then((response) => {
-      console.log("effect");
-      setPersons(response.data);
+    pServices.getAll().then((returned) => {
+      console.log("welcome to the page ");
+      setPersons(returned);
     });
   }, []);
 
@@ -36,12 +35,24 @@ const App = () => {
     }
 
     const theNewPerson = { name: newName, number: newNumber };
-
     pServices.create(theNewPerson).then((returnedPerson) => {
       setPersons(persons.concat(returnedPerson));
       setNewName("");
       setNewNumber("");
     });
+  };
+
+  const handleDelete = (id) => {
+    pServices
+      .deletePerson(id)
+      .then(() => {
+        setPersons((prevPersons) =>
+          prevPersons.filter((person) => person.id !== id),
+        );
+      })
+      .catch(() => {
+        alert("The user was already deleted");
+      });
   };
   const handleChangeName = (event) => {
     setNewName(event.target.value);
@@ -58,6 +69,7 @@ const App = () => {
     person.name.toLocaleLowerCase().includes(search),
   );
   // console.log(personsToShow);
+
   return (
     <div>
       <h2>Phonebook</h2>
@@ -71,7 +83,8 @@ const App = () => {
       <Filter handleSearch={handleSearch} />
 
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+
+      <Persons personsToShow={personsToShow} onDelete={handleDelete} />
     </div>
   );
 };
