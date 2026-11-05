@@ -1,8 +1,7 @@
 const Filter = ({ handleSearch }) => {
   return (
     <div>
-      search :
-      <input type="text" onChange={handleSearch} />
+      filter shown with <input type="text" onChange={handleSearch} />
     </div>
   );
 };

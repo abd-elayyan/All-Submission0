@@ -22,24 +22,39 @@ const App = () => {
     // console.log("sumit form persons", persons);
 
     const name = newName.trim();
-    let isExist = persons.some((person) => person.name === name);
-
-    if (isExist) {
-      alert(`${newName} is alreddy added`);
-      return;
-    }
+    let isExist = persons.find((person) => person.name === name);
 
     if (name === "") {
       alert(`you cannot add an empty name`);
       return;
     }
+    let wantUpdate = "";
+    if (isExist) {
+      wantUpdate = confirm(
+        `${newName} is alreddy added , do you want to update his number ?`,
+      );
+      if (wantUpdate) {
+        const theNewPerson = { name: newName, number: newNumber };
+        // const id = isExist.id;
+        // handleDelete(id);
+        pServices.update(isExist.id, theNewPerson).then((returnedPerson) => {
+          setPersons((previous) =>
+            previous.map((person) =>
+              person.id === returnedPerson.id ? returnedPerson : person,
+            ),
+          );
+          setNewName("");
+          setNewNumber("");
+        });
+      } else console.log("no person has been added or modified.");
+    }
 
-    const theNewPerson = { name: newName, number: newNumber };
-    pServices.create(theNewPerson).then((returnedPerson) => {
-      setPersons(persons.concat(returnedPerson));
-      setNewName("");
-      setNewNumber("");
-    });
+    // const theNewPerson = { name: newName, number: newNumber };
+    // pServices.create(theNewPerson).then((returnedPerson) => {
+    //   setPersons(persons.concat(returnedPerson));
+    //   setNewName("");
+    //   setNewNumber("");
+    // });
   };
 
   const handleDelete = (id) => {
@@ -72,7 +87,10 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+
+      <Filter handleSearch={handleSearch} />
+      <h2>add a new </h2>
       <PersonForm
         newName={newName}
         newNumber={newNumber}
@@ -80,7 +98,6 @@ const App = () => {
         handleChangeNumber={handleChangeNumber}
         submitForm={submitForm}
       />
-      <Filter handleSearch={handleSearch} />
 
       <h2>Numbers</h2>
 

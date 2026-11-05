@@ -11,11 +11,6 @@
       "id": "AcQ2xSqNiQQ"
     },
     {
-      "name": "dsv",
-      "number": "234",
-      "id": "q74rG3kIhac"
-    },
-    {
       "name": "sdad",
       "number": "234",
       "id": "87gtbKyB0O0"
@@ -29,6 +24,11 @@
       "name": "aaaa",
       "number": "222",
       "id": "uJYfE0WfbvA"
+    },
+    {
+      "name": "dd",
+      "number": "122",
+      "id": "u6V4qa3NBhc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

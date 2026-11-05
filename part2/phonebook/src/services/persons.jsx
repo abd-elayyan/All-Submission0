@@ -11,7 +11,13 @@ const deletePerson = (id) => {
   return axios.delete(`${baseURL}/${id}`).then((response) => response.data);
 };
 
+const update = (id, newData) => {
+  console.log(`the person id :${id} has update his number.`);
+  return axios
+    .put(`${baseURL}/${id}`, newData)
+    .then((response) => response.data);
+};
 const getAll = () => {
   return axios.get(baseURL).then((response) => response.data);
 };
-export default { getAll, create, deletePerson };
+export default { update, getAll, create, deletePerson };
