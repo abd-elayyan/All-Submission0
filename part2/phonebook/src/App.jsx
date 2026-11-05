@@ -3,12 +3,18 @@ import PersonForm from "../components/PersonForm";
 import Filter from "../components/Filter";
 import Persons from "../components/Persons";
 import pServices from "./services/persons";
+import Notification from "../components/Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [search, setSearch] = useState("");
+  const [message, setMessage] = useState({
+    message: "",
+    successful: true,
+  });
+  // const [redMessage, setRedMessage] = useState("");
 
   useEffect(() => {
     pServices.getAll().then((returned) => {
@@ -35,39 +41,95 @@ const App = () => {
       );
       if (wantUpdate) {
         const theNewPerson = { name: newName, number: newNumber };
-        // const id = isExist.id;
-        // handleDelete(id);
-        pServices.update(isExist.id, theNewPerson).then((returnedPerson) => {
-          setPersons((previous) =>
-            previous.map((person) =>
-              person.id === returnedPerson.id ? returnedPerson : person,
-            ),
-          );
-          setNewName("");
-          setNewNumber("");
-        });
+        pServices
+          .update(isExist.id, theNewPerson)
+          .then((returnedPerson) => {
+            setPersons((previous) =>
+              previous.map((person) =>
+                person.id === returnedPerson.id ? returnedPerson : person,
+              ),
+            );
+            setNewName("");
+            setNewNumber("");
+          })
+          .catch(() => {
+            let m = {
+              message: `The person you want to update has been deleted previously`,
+              successful: false,
+            };
+            setMessage(m);
+            setTimeout(() => {
+              setMessage("");
+            }, 3000);
+            setPersons(persons.filter((person) => person.id !== isExist.id));
+          });
+        let m = {
+          message: `person :${theNewPerson.name} has updateed his number`,
+          successful: true,
+        };
+        setMessage(m);
+        setTimeout(() => {
+          let m = {
+            message: ``,
+            successful: true,
+          };
+          setMessage(m);
+        }, 3000);
       } else console.log("no person has been added or modified.");
-    }
+    } else {
+      const theNewPerson = { name: newName, number: newNumber };
+      pServices.create(theNewPerson).then((returnedPerson) => {
+        setPersons(persons.concat(returnedPerson));
+        setNewName("");
+        setNewNumber("");
+      });
+      let m = {
+        message: `person :${theNewPerson.name} has been added successfully`,
+        successful: true,
+      };
+      setMessage(m);
 
-    // const theNewPerson = { name: newName, number: newNumber };
-    // pServices.create(theNewPerson).then((returnedPerson) => {
-    //   setPersons(persons.concat(returnedPerson));
-    //   setNewName("");
-    //   setNewNumber("");
-    // });
+      setTimeout(() => {
+        let m = {
+          message: ``,
+          successful: true,
+        };
+        setMessage(m);
+      }, 3000);
+    }
   };
 
   const handleDelete = (id) => {
-    pServices
-      .deletePerson(id)
-      .then(() => {
-        setPersons((prevPersons) =>
-          prevPersons.filter((person) => person.id !== id),
-        );
-      })
-      .catch(() => {
-        alert("The user was already deleted");
-      });
+    const personToDelete = persons.find((p) => p.id === id);
+    if (
+      confirm(
+        `are you sure you want to delete the following person : ${personToDelete.name}`,
+      )
+    ) {
+      pServices
+        .deletePerson(id)
+        .then(() => {
+          setPersons((prevPersons) =>
+            prevPersons.filter((person) => person.id !== id),
+          );
+        })
+        .catch(() => {
+          alert("The user was already deleted");
+        });
+      let m = {
+        message: `person :${personToDelete.name} has been deleted successfully`,
+        successful: true,
+      };
+      setMessage(m);
+
+      setTimeout(() => {
+        let m = {
+          message: ``,
+          successful: true,
+        };
+        setMessage(m);
+      }, 5000);
+    }
   };
   const handleChangeName = (event) => {
     setNewName(event.target.value);
@@ -88,7 +150,7 @@ const App = () => {
   return (
     <div>
       <h1>Phonebook</h1>
-
+      {message.message && <Notification message={message} />}{" "}
       <Filter handleSearch={handleSearch} />
       <h2>add a new </h2>
       <PersonForm
@@ -98,9 +160,7 @@ const App = () => {
         handleChangeNumber={handleChangeNumber}
         submitForm={submitForm}
       />
-
       <h2>Numbers</h2>
-
       <Persons personsToShow={personsToShow} onDelete={handleDelete} />
     </div>
   );

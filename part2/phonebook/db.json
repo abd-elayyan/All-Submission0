@@ -1,34 +1,9 @@
 {
   "persons": [
     {
-      "name": "3432423",
-      "number": "4234324",
-      "id": "t24WjyheRWI"
-    },
-    {
-      "name": "qweds",
-      "number": "234324",
-      "id": "AcQ2xSqNiQQ"
-    },
-    {
-      "name": "sdad",
-      "number": "234",
-      "id": "87gtbKyB0O0"
-    },
-    {
-      "name": "sadsa",
-      "number": "23432",
-      "id": "qeB9vp_9cM4"
-    },
-    {
-      "name": "aaaa",
-      "number": "222",
-      "id": "uJYfE0WfbvA"
-    },
-    {
-      "name": "dd",
-      "number": "122",
-      "id": "u6V4qa3NBhc"
+      "name": "asdasd",
+      "number": "",
+      "id": "T4bqdEMj5Xc"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
