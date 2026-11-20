@@ -47,6 +47,21 @@ app.get("/api/persons/:id", (req, res) => {
   }
 });
 
+app.delete("/api/persons/:id", (req, res) => {
+  const id = req.params.id;
+  const person = persons.find((p) => p.id === id);
+  if (!person) {
+    console.log(`there is no preson with id ${id}`);
+    res.status(404).json({ message: `no person with id ${id}` });
+  } else {
+    persons = persons.filter((person) => person.id !== id);
+    res.status(200).json({
+      persons: persons,
+      message: `person with id ${id} has been deleted `,
+    });
+  }
+});
+
 const PORT = 3001;
 app.listen(PORT);
 console.log(`server on port ${PORT}`);
