@@ -69,7 +69,9 @@ app.delete("/api/persons/:id", (req, res) => {
 app.post("/api/persons", (req, res) => {
   const body = req.body;
   console.log(body);
-  if (!body.name) {
+  if (persons.find((p) => p.name === body.name)) {
+    res.status(400).json({ message: "Name already exist " });
+  } else if (!body.name) {
     res.status(400).json({ message: "Missing name" });
   } else if (!body.number) {
     res.status(400).json({ message: "Missing number" });
