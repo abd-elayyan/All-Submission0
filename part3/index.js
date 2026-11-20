@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 let persons = [
   {
     id: "1",
@@ -23,18 +25,22 @@ let persons = [
     number: "39-23-6423122",
   },
 ];
-
+const generateID = () => {
+  const maxID =
+    persons.length > 0
+      ? Math.max(...persons.map((person) => Number(person.id)))
+      : 0;
+  return String(maxID + 1);
+};
 app.get("/api/persons", (req, res) => {
   res.json(persons);
 });
-
 app.get("/info", (req, res) => {
   res.send(
     `Phonebook has info for ${persons.length} people
       <br></br>  ${new Date()}`,
   );
 });
-
 app.get("/api/persons/:id", (req, res) => {
   const id = String(req.params.id);
   const person = persons.find((p) => p.id === id);
@@ -46,7 +52,6 @@ app.get("/api/persons/:id", (req, res) => {
     res.status(404).end();
   }
 });
-
 app.delete("/api/persons/:id", (req, res) => {
   const id = req.params.id;
   const person = persons.find((p) => p.id === id);
@@ -61,7 +66,22 @@ app.delete("/api/persons/:id", (req, res) => {
     });
   }
 });
-
+app.post("/api/persons", (req, res) => {
+  const body = req.body;
+  console.log(body);
+  if (!body.name) {
+    res.status(400).json({ message: "Missing name" });
+  } else if (!body.number) {
+    res.status(400).json({ message: "Missing number" });
+  }
+  const newPerson = {
+    name: body.name,
+    number: body.number,
+    id: generateID(),
+  };
+  persons = persons.concat(newPerson);
+  res.json({ persons, message: `New person added successfully` });
+});
 const PORT = 3001;
 app.listen(PORT);
 console.log(`server on port ${PORT}`);
