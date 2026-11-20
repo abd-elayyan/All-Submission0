@@ -1,7 +1,15 @@
 const express = require("express");
-const app = express();
+const morgan = require("morgan");
 
+const app = express();
 app.use(express.json());
+
+morgan.token("body", (request) => {
+  return request.method === "POST" ? JSON.stringify(request.body) : "";
+});
+app.use(
+  morgan(":method :url :status :res[content-length] - :response-time ms :body"),
+);
 
 let persons = [
   {
@@ -68,7 +76,7 @@ app.delete("/api/persons/:id", (req, res) => {
 });
 app.post("/api/persons", (req, res) => {
   const body = req.body;
-  console.log(body);
+  //   console.log(body);
   if (persons.find((p) => p.name === body.name)) {
     res.status(400).json({ message: "Name already exist " });
   } else if (!body.name) {
